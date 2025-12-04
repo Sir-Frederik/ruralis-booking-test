@@ -13,9 +13,9 @@ const guests = [
   { guestId: "g10", firstName: "Giulia", lastName: "Ferrari", email: "giulia.f@email.com", phone: "+39 351 4567890" },
 ];
 
-// ============================================
+//
 // PROPERTIES (Proprietà)
-// ============================================
+//
 const properties = [
   { propertyId: "p1", name: "Casa del Borgo - Civita di Bagnoregio" },
   { propertyId: "p2", name: "Villa Toscana - San Gimignano" },
@@ -31,18 +31,18 @@ const properties = [
 
 const statuses = ["confirmed", "pending", "cancelled", "completed"];
 
-// ============================================
+//
 // FUNZIONE: Genera data casuale nel range
-// ============================================
+//
 function randomDate(daysFromNow) {
   const date = new Date();
   date.setDate(date.getDate() + daysFromNow);
   return date.toISOString().split("T")[0]; // converto la data in UTC e la splitto  prendendo solo il formato: "2024-12-05"
 }
 
-// ============================================
+//
 // FUNZIONE: Genera bookings
-// ============================================
+//
 function generateBookings(count) {
   const bookings = [];
 
@@ -72,14 +72,14 @@ function generateBookings(count) {
   return bookings.sort((a, b) => a.checkInDate.localeCompare(b.checkInDate));
 }
 
-// ============================================
+//
 // GENERO 150 BOOKINGS (per simulare il problema!)
-// ============================================
+//
 const bookings = generateBookings(150);
 
-// ============================================
+//
 // EXPORTS
-// ============================================
+//
 module.exports = {
   bookings,
   guests,
