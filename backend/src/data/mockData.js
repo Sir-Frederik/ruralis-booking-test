@@ -11,6 +11,7 @@ const guests = [
   { guestId: "g8", firstName: "Giacomo", lastName: "Poretti", email: "Giacomo.p@email.es", phone: "+34 612 345678" },
   { guestId: "g9", firstName: "Max", lastName: "Pezzali", email: "max.p@email.jp", phone: "+88 388 38838838" },
   { guestId: "g10", firstName: "Giulia", lastName: "Ferrari", email: "giulia.f@email.com", phone: "+39 351 4567890" },
+  { guestId: "g11", firstName: "Paolino", lastName: "Paperino", email: "paolino.p@email.com", phone: "+39 351 3567890" },
 ];
 
 //
