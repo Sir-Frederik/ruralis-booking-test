@@ -4,7 +4,7 @@ Soluzione proposta per lo studio caso **"Full Stack Developer"** di Ruralis.
 
 ---
 
-## Il problema
+## The problem
 
 The admin dashboard for booking management generates an error **HTTP 413 Payload Too Large** when the number of bookings grows above a certain threshold (e.g. more than 100).
 
