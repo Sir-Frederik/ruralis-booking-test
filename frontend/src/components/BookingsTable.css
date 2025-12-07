@@ -1,0 +1,80 @@
+:root {
+  --ruralis-green: #2d4a3e;
+}
+
+/* Card header */
+.bookings-card .card-header {
+  background-color: var(--ruralis-green);
+}
+
+/* Nome ospite */
+.guest-name {
+  color: var(--ruralis-green);
+}
+
+/* Colonna ID */
+.booking-id {
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+/* Prezzo in evidenza */
+.price-cell {
+  font-weight: 600;
+}
+
+/* Loading spinner colore */
+.loading-spinner {
+  color: var(--ruralis-green) !important;
+}
+
+.pagination-btn {
+  min-width: 120px;
+  background-color: var(--ruralis-green);
+  border-color: var(--ruralis-green);
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #1e3a2f;
+  border-color: #1e3a2f;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(45, 74, 62, 0.3);
+}
+
+.pagination-btn:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* Hover sulle righe */
+.bookings-table tbody tr:hover {
+  background-color: #f5f3ef !important;
+}
+
+.status-confirmed {
+  background-color: #1b8a56d5;
+  color: white;
+}
+
+.status-completed {
+  background-color: #198754;
+  color: white;
+}
+
+.status-pending {
+  background-color: #ffc10796;
+  color: #212529;
+}
+
+.status-cancelled {
+  background-color: #dc354696;
+  color: white;
+}

@@ -173,6 +173,7 @@ contains the component `BookingsTable.jsx`, that:
 - show the table with data,
 - exposes navigation buttons between pages.
   I don't use Redux: local state is sufficient for this scenario.
+  I used Bootstrap to style.
 
 ---
 

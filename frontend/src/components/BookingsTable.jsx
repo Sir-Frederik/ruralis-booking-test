@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./BookingsTable.css";
 
 function BookingsTable() {
   //stato per salvare i booking della pagina corrente
@@ -56,72 +57,101 @@ function BookingsTable() {
 
   //Renderizzo il caricamento
   if (loading) {
-    return <p> Caricamento Prenotazioni... ⏳</p>;
+    return (
+      <div className="card bookings-card">
+        <div className="card-body text-center py-5">
+          <div className="spinner-border loading-spinner mb-3" role="status"></div>
+          <p className="text-muted">Caricamento Prenotazioni... ⏳</p>
+        </div>
+      </div>
+    );
   }
 
   //Renderizzo l'errore
   if (error) {
-    <div>
-      {" "}
-      <p> Errore: {error}</p>
-      <button onClick={() => fetchBookings(currentPage)}> Ricarica </button>
-    </div>;
+    return (
+      <div className="card bookings-card">
+        <div className="card-body text-center py-5">
+          <div className="alert alert-danger">Errore: {error}</div>
+          <button className="btn btn-outline-danger" onClick={() => fetchBookings(currentPage)}>
+            Ricarica
+          </button>
+        </div>
+      </div>
+    );
   }
 
   //renderizzo la tabella con le prenotazioni
 
   return (
-    <div>
-      <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th> ID</th>
-            <th> Ospite</th>
-            <th> Proprietà</th>
-            <th> Check-in</th>
-            <th> Check-out</th>
-            <th> Stato</th>
-            <th> Prezzo</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {/* ORa ciclo tutti i bookings della pagina attuale */}
-          {bookings.map((booking) => (
-            <tr key={booking.bookingId}>
-              <td>{booking.bookingId}</td>
-
-              {/* Se l'ospite esiste, mostro nome e cognome */}
-              <td>
-                {booking.guest?.firstName} {booking.guest?.lastName}
-              </td>
-
-              <td>{booking.propertyName}</td>
-              <td>{booking.checkInDate}</td>
-              <td>{booking.checkOutDate}</td>
-              <td>{booking.status}</td>
-              <td>€{booking.totalPrice}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* 🔢 Controlli di paginazione */}
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={handlePrevious} disabled={currentPage === 1}>
-          ⬅️ Precedente
-        </button>
-
-        <span style={{ margin: "0 15px" }}>
-          Pagina {pagination?.currentPage} di {pagination?.totalPages}
-        </span>
-
-        <button onClick={handleNext} disabled={!pagination?.hasMore}>
-          Successiva ➡️
-        </button>
+    <div className="card shadow-sm bookings-card">
+      <div className="card-header text-white">
+        <h5 className="mb-0"> Bookings</h5>
       </div>
 
-      {/* Info aggiuntive */}
-      <p>Totale prenotazioni: {pagination?.totalItems}</p>
+      <div className="card-body p-0">
+        <div className="table-responsive">
+          <table className="table table-hover bookings-table mb-0">
+            <thead className="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Guest</th>
+                <th>Property</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Condition</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {/* ORa ciclo tutti i bookings della pagina attuale */}
+              {bookings.map((booking) => (
+                <tr key={booking.bookingId}>
+                  <td className="text-muted booking-id">{booking.bookingId}</td>
+
+                  {/* Se l'ospite esiste, mostro nome e cognome */}
+                  <td className="fw-semibold guest-name">
+                    {booking.guest?.firstName} {booking.guest?.lastName}
+                  </td>
+
+                  <td>{booking.propertyName}</td>
+                  <td>{booking.checkInDate}</td>
+                  <td>{booking.checkOutDate}</td>
+                  <td>
+                    <span className={`badge status-${booking.status}`}>{booking.status}</span>
+                  </td>
+                  <td className="price-cell">€{booking.totalPrice}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/*  Controlli di paginazione */}
+      <div className="card-footer bg-white">
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <p className="text-muted mb-0">
+            {/* Info aggiuntive */}
+            Total reservations: <strong>{pagination?.totalItems}</strong>
+          </p>
+
+          <div className="d-flex align-items-center gap-2">
+            <button className="btn btn-outline-success btn-sm pagination-btn" onClick={handlePrevious} disabled={currentPage === 1}>
+              ⬅️ Previous
+            </button>
+
+            <span className="text-muted px-2">
+              Page <strong>{pagination?.currentPage}</strong> di <strong>{pagination?.totalPages}</strong>
+            </span>
+
+            <button className="btn btn-outline-success btn-sm pagination-btn" onClick={handleNext} disabled={!pagination?.hasMore}>
+              Next ➡️
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
