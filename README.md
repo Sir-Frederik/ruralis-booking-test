@@ -77,6 +77,9 @@ git clone https://github.com/Sir-Frederik/ruralis-booking-test
 cd ruralis-test
 ```
 
+> Note: The branch to use is 'main'.  
+> The other branches are work/experimentation.
+
 ---
 
 ### 2. Start the backend
