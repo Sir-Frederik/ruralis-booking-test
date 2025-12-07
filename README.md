@@ -1,6 +1,6 @@
 # Ruralis Booking Dashboard – Case Study
 
-Soluzione proposta per lo studio caso **"Full Stack Developer"** di Ruralis.
+Proposed solution for the Ruralis **"Full Stack Developer"** case study.
 
 ---
 
@@ -21,7 +21,7 @@ This happens because:
 
 ## Solution
 
-I implemented a **server-side pagination** supported by a frontend that requests data page by page.
+I've implemented a **server-side pagination** supported by a frontend that requests data page by page.
 
 ### Backend (Paginated API)
 
@@ -192,7 +192,7 @@ In this project:
 - but the API has the same contract,
 - the frontend is already compatible with a real paginated API.
 
-Questo approccio evita l'**HTTP 413 Payload Too Large** e rende scalabile la dashboard.
+This approach avoids the **HTTP 413 Payload Too Large** and makes the dashboard scalable.
 
 ---
 
