@@ -1,76 +1,76 @@
 # Ruralis Booking Dashboard – Case Study
 
-Soluzione proposta per lo study case **“Full Stack Developer”** di Ruralis.
+Soluzione proposta per lo studio caso **"Full Stack Developer"** di Ruralis.
 
 ---
 
 ## Il problema
 
-La dashboard admin per la gestione delle prenotazioni genera un errore **HTTP 413 Payload Too Large** quando il numero di booking cresce oltre una certa soglia (es. più di 100).
+The admin dashboard for booking management generates an error **HTTP 413 Payload Too Large** when the number of bookings grows above a certain threshold (e.g. more than 100).
 
-Questo accade perché:
+This happens because:
 
-1. Il backend utilizza una **Scan** su DynamoDB per leggere tutti i record nell’intervallo di date.
-2. Ogni booking viene arricchito con una query separata verso la tabella degli ospiti (**N+1 problem**).
-3. Tutte le prenotazioni vengono restituite in **un’unica risposta JSON**, senza alcuna paginazione lato server.
-4. Il frontend applica la paginazione **solo lato client** (`Array.slice(...)`), ma è costretto a scaricare comunque l’intero dataset.
+1. The backend uses a **Scan** on DynamoDB to read all records in the date range.
+2. Each booking is enriched with a separate query to the guest table (**N+1 problem**).
+3. All reservations are returned in **a single JSON response**, without any server-side pagination.
+4. The frontend applies **client-side only** pagination ('Array.slice(...)'), but is forced to download the entire dataset anyway.
 
-**Conseguenza:** quando i dati crescono, la risposta JSON diventa troppo grande, generando l’errore **HTTP 413**, e la dashboard smette di funzionare.
+**Consequence:** As the data grows, the JSON response becomes too large, resulting in the **HTTP 413** error, and the dashboard stops working.
 
 ---
 
-## La soluzione
+## Solution
 
-Ho implementato una **paginazione lato server** supportata da un frontend che richiede i dati pagina per pagina.
+I implemented a **server-side pagination** supported by a frontend that requests data page by page.
 
-### Backend (API paginata)
+### Backend (Paginated API)
 
-L’endpoint `/api/bookings` ora:
+The endpoint `/api/bookings` now:
 
-- restituisce solo `limit` risultati per volta (es. 10 o 50),
-- accetta `page` come numero della pagina da caricare,
-- include nella risposta metadati di paginazione (pagina corrente, totale elementi, numero totale di pagine, ecc.).
+- returns only 'limit' results at a time (e.g. 10 or 50),
+- accepts 'page' as the page number to load,
+- includes pagination metadata (current page, total items, total number of pages, etc.) in the response.
 
 ### Frontend (React)
 
-Il frontend non richiede più l’intero dataset, ma carica solo ciò che serve:
+The frontend no longer requires the entire dataset, but only loads what is needed:
 
-- effettua chiamate del tipo:  
+- makes calls like this:  
   `GET /api/bookings?page=1&limit=10`
-- mostra i dati in tabella,
-- ad ogni click su “pagina successiva”/“precedente” effettua una nuova chiamata al backend.
+- show data in table,
+- on each click on "next page"/"previous" makes a new call to the backend.
 
-**Benefici:**
+**Advantages:**
 
-- la dimensione del payload rimane contenuta,
-- l’errore **413** viene eliminato,
-- il sistema scala senza problemi all’aumentare delle prenotazioni.
+- the payload size remains small,
+- error **413** is deleted,
+- the system scales smoothly as bookings increase.
 
 ---
 
 ## Tech Stack
 
-| Layer    | Tecnologia                                  |
-| -------- | ------------------------------------------- |
-| Backend  | Node.js + Express                           |
-| Frontend | React + Vite                                |
-| Database | Mock data in memoria (simulazione DynamoDB) |
+| Layer    | Tecnologia                                |
+| -------- | ----------------------------------------- |
+| Backend  | Node.js + Express                         |
+| Frontend | React + Vite                              |
+| Database | In-memory data mock (DynamoDB simulation) |
 
-> Nota: in questo case study utilizzo dati mock.  
-> La struttura dell’API corrisponde però a quella che implementerei su AWS Lambda con DynamoDB in produzione.
+> Note: In this case study I use mock data.  
+> The API structure, however, matches what I would implement on AWS Lambda with DynamoDB in production.
 
 ---
 
-## Come avviare il progetto
+## How to start the project
 
-### Prerequisiti
+### Prerequisites
 
 - Node.js (v18+)
 - npm
 
 ---
 
-### 1. Clona il repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Sir-Frederik/ruralis-booking-test
@@ -79,7 +79,7 @@ cd ruralis-test
 
 ---
 
-### 2. Avvia il backend
+### 2. Start the backend
 
 ```bash
 cd backend
@@ -87,14 +87,14 @@ npm install
 npm start
 ```
 
-Il backend sarà disponibile su:  
+The backend will be available at:  
 `http://localhost:3001`
 
 ---
 
-### 3. Avvia il frontend
+### 3. Start the frontend
 
-In un nuovo terminale:
+In a new terminal:
 
 ```bash
 cd frontend
@@ -102,31 +102,31 @@ npm install
 npm run dev
 ```
 
-Il frontend sarà disponibile su:  
+The frontend will be available at:  
 `http://localhost:5173`
 
 ---
 
-## Dettagli implementativi – Backend
+## Implementation Details - Backend
 
-I dati mock si trovano in `backend/src/data/mockData.js`
+The mock data is located in `backend/src/data/mockData.js`
 
-- **guests**: guestId, nome, cognome, email, telefono
-- **properties**: propertyId, nome
-- **bookings**: 150 prenotazioni generate casualmente (date, guestId, propertyName, status, prezzo totale, createdAt)
+- **guests**: guestId, first name, last name, email, phone
+- **properties**: propertyId, name
+- **bookings**: 150 randomly generated reservations (date, guestId, propertyName, status, prezzo totale, createdAt)
 
-L’endpoint principale è:
+The main endpoint is:
 
 ```
 GET http://localhost:3001/api/bookings?page=1&limit=10
 ```
 
-### Parametri
+### Parameters
 
-- `page` – numero pagina (base 1)
-- `limit` – numero di risultati per pagina
+- `page` – page number (base 1)
+- `limit` – number of results per page
 
-### Esempio di risposta JSON
+### Example JSON response
 
 ```json
 {
@@ -154,49 +154,50 @@ GET http://localhost:3001/api/bookings?page=1&limit=10
 }
 ```
 
-### Vantaggi
+### Advantages
 
-- il backend invia solo i dati necessari per quella pagina,
-- la risposta rimane leggera e prevedibile,
-- la struttura si presta facilmente ad aggiungere filtri (`fromDate`, `toDate`, `status`, ecc.).
-
----
-
-## Dettagli implementativi – Frontend
-
-Il frontend (React + Vite):
-
-- contiene il componente `BookingsTable.jsx`, che:
-  - effettua la fetch verso `/api/bookings?page=X&limit=Y`,
-  - gestisce gli stati locali: `bookings`, `pagination`, `isLoading`, `error`,
-  - mostra la tabella con i dati,
-  - espone pulsanti di navigazione tra le pagine.
-- Non utilizzo Redux: lo stato locale è sufficiente per questo scenario.
+- the backend sends only the data needed for that page,
+- the answer remains light and predictable,
+- the structure lends itself easily to adding filters (`fromDate`, `toDate`, `status`, ecc.).
 
 ---
 
-## Collegamento con il problema originale (AWS Lambda + DynamoDB)
+## Implementation details - Frontend
 
-Il progetto illustra concretamente la soluzione al problema del case study:
+The frontend (React + Vite):
 
-In produzione:
+contains the component `BookingsTable.jsx`, that:
 
-- la logica verrebbe eseguita su una AWS Lambda,
-- i dati verrebbero letti da DynamoDB usando `Query` (evitando Scan quando possibile),
-- la paginazione utilizza `Limit` + `LastEvaluatedKey` (cursor-based pagination).
-
-In questo progetto:
-
-- uso mock data,
-- ma l’API ha lo stesso contratto,
-- il frontend è già compatibile con una API reale paginata.
-
-Questo approccio evita l’**HTTP 413 Payload Too Large** e rende scalabile la dashboard.
+- fetch towards `/api/bookings?page=X&limit=Y`,
+- manages local states: `bookings`, `pagination`, `isLoading`, `error`,
+- show the table with data,
+- exposes navigation buttons between pages.
+  I don't use Redux: local state is sufficient for this scenario.
 
 ---
 
-## Autore
+## Connection to the original problem (AWS Lambda + DynamoDB)
+
+The project concretely illustrates the solution to the case study problem:
+
+In production:
+
+- the logic would run on an AWS Lambda,
+- data would be read from DynamoDB using 'Query' (avoiding Scan when possible),
+- pagination uses 'Limit' + 'LastEvaluatedKey' (cursor-based pagination).
+
+In this project:
+
+- I use mock data,
+- but the API has the same contract,
+- the frontend is already compatible with a real paginated API.
+
+Questo approccio evita l'**HTTP 413 Payload Too Large** e rende scalabile la dashboard.
+
+---
+
+## Author
 
 **Federico Brunetti**
 
-Progetto realizzato come case study per la posizione di Stage Full Stack Developer presso Ruralis.
+Project created as a case study for the Stage Full Stack Developer position at Ruralis.
